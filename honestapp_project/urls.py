@@ -15,8 +15,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from honest import views
 
 urlpatterns = [
+    path('', views.index, name='home'), # added to redirect empty path to homepage
     path('honest/', include('honest.urls')),
     path('accounts/', include('registration.backends.simple.urls')),
     path('admin/', admin.site.urls),
