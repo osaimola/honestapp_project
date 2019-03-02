@@ -128,3 +128,7 @@ REGISTRATION_OPEN = True
 ACCOUNT_ACTIVATION_DAYS = 14
 REGISTRATION_AUTO_LOGIN = True
 LOGIN_REDIRECT_URL = '/honest/'
+
+# settings for heroku
+import django_heroku
+django_heroku.settings(locals())
