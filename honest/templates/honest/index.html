@@ -1,0 +1,67 @@
+{% extends 'honest/themedbase.html' %}
+
+{% load static %}
+{% block title_block%}
+    <title>Honest</title>
+{% endblock %}
+
+{% block intro_block %}
+    <h1>Honest</h1>
+
+    <!-- show welcome message if user is logged in-->
+    <p>
+        {% if user.is_authenticated %}
+        <b>Welcome, {{user.username}}</b>
+        <br>
+        {% endif %}
+        {{ honest_message }}
+        </br>
+        stay <b>straight</b>, it pays!
+    </p>
+
+    {% if user.is_authenticated %}
+        <div class="one-third first"><a href="{% url 'honest:add_person' %}">Add a person</a></div>
+        <div class="one-third"><a href="{% url 'honest:add_area' %}">Add an area</a></div>
+        <div class="one-third"><a href="{% url 'honest:add_category' %}">Add a category</a></div>
+    {% else %}
+        <p><a href="{% url 'auth_login' %}">Sign in</a> to add a person, area or category</p>
+    {% endif %}
+{% endblock %}
+
+{% block body_block %}
+    <!-- display categories-->
+    <div class="one-half first">
+        <a href="{% url 'honest:all_categories' %}"><h2>Categories</h2></a>
+        {% if categories %}
+        <ul>
+            {% for category in categories %}
+            <li><a href="{% url 'honest:category' category.slug %}">{{category.category}}</a></li>
+            {%endfor%}
+        </ul>
+            {% if categories.count > 9 %}
+                <a href="{% url 'honest:all_categories' %}">See all</a>
+            {% endif %}
+        {%else%}
+            No categories available.
+        {%endif%}
+    </div>
+
+    <!-- display areas -->
+    <div class="one-half">
+        <a href="{% url 'honest:all_areas' %}"><h2>Areas</h2></a>
+        {% if areas %}
+        <ul>
+            {% for area in areas %}
+            <li><a href="{% url 'honest:area' area.slug %}">{{area.state}}</a></li>
+            {% endfor %}
+        </ul>
+            {% if areas.count > 9 %}
+                <a href="{% url 'honest:all_areas' %}">See all</a>
+            {% endif %}
+        {% else %}
+            No Areas available.
+        {% endif %}
+    </div>
+
+    <!--- <img src="{%static 'honest/images/logoidea.jpg'%}" alt="honest logo"/> --->
+{% endblock %}

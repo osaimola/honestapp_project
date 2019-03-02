@@ -1,0 +1,52 @@
+{% extends 'honest/themedbase.html' %}
+
+{% block title_block %}
+    {% if category %}
+        <title>{{category_name}} - Honest</title>
+    {% else %}
+        <title> Category Not Found - Honest</title>
+    {% endif %}
+{% endblock %}
+
+{% block intro_block %}
+    <h1> Honest {{category.category}} People</h1>
+    {% if user.is_authenticated %}
+        <div class="one-third first"><a href="{% url 'honest:add_person' %}">Add a person</a></div>
+        <div class="one-third"><a href="{% url 'honest:add_area' %}">Add an area</a></div>
+        <div class="one-third"><a href="{% url 'honest:add_category' %}">Add a category</a></div>
+    {% else %}
+        <p><a href="{% url 'auth_login' %}">Sign in</a> to add a person, area or category</p>
+    {% endif %}
+{% endblock %}
+
+{% block body_block %}
+{% if category %}
+    {% if people %}
+        <!-- display people in this category -->
+        {% for person in people %}
+<a href="{% url 'honest:person' person.location person.service person.id %}">{{person.first_name}}, {{person.last_name}}.</a>
+            <br>{{person.service}} in {{person.location}}
+            <br>Contact: {{person.phone_number}}
+            <br>Email: {{person.email}}
+            <br>Yay or Nay: {{person.vote_positive}}
+            <br><br>
+        {% endfor %}
+
+        <!-- display all areas with people in this category -->
+        <h2>View {{category.category}} by location</h2>
+        <ul>
+            {% for  area in areas %}
+            <li><a href="/honest/{{area.slug}}/{{category.slug}}/">{{area.state}}</a> </li>
+            {% endfor %}
+        </ul>
+
+    {% else %}
+        No Honest People Offer This Service Yet :(
+        <br><br>
+    {% endif %}
+
+    {{category.views}} people viewed this page.
+{% else %}
+    No matching category found.
+{% endif %}
+{% endblock %}

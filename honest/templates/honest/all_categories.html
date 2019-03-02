@@ -1,0 +1,28 @@
+{% extends 'honest/themedbase.html' %}
+
+{% block title_block %}
+    <title>All Categories - Honest</title>
+{% endblock %}
+
+{% block intro_block %}
+    <h1>All Categories - Honest</h1>
+{% endblock %}
+
+{% block body_block %}
+
+    {% if user.is_authenticated %}
+        <a href="{% url 'honest:add_category' %}"><h2>Add a category</h2></a>
+    {% else %}
+        <p><a href="{% url 'auth_login' %}">Sign in</a> to add a category.</p>
+    {% endif %}
+
+    {% if categories %}
+        <ul>
+        {% for category in categories %}
+            <li><a href="{% url 'honest:category' category.slug %}">{{category.category}}</a></li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No categories yet.</p>
+    {% endif %}
+{% endblock %}

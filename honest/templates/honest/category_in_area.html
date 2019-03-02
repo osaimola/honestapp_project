@@ -1,0 +1,27 @@
+{% extends 'honest/themedbase.html' %}
+
+{% block title_block %}
+    <title>{{category.category}} in {{area.state}} - Honest</title>
+{% endblock %}
+
+{% block intro_block %}
+    <h1>Honest {{category.category}} in {{area.state}}</h1>
+    {% if user.is_authenticated %}
+        <div class="one-third first"><a href="{% url 'honest:add_person' %}">Add a person</a></div>
+        <div class="one-third"><a href="{% url 'honest:add_area' %}">Add an area</a></div>
+        <div class="one-third"><a href="{% url 'honest:add_category' %}">Add a category</a></div>
+    {% else %}
+        <p><a href="{% url 'auth_login' %}">Sign in</a> to add a person, area or category</p>
+    {% endif %}
+{% endblock %}
+
+{% block body_block %}
+    {% for person in people %}
+    <a href="{% url 'honest:person' person.location person.service person.id%}">{{person.first_name}}, {{person.last_name}}.</a>
+            </br>{{person.service}} in {{person.location}}
+            </br>Contact: {{person.phone_number}}
+            </br>Email: {{person.email}}
+            </br>Yay or Nay: {{person.vote_positive}}
+            </br></br></br>
+    {% endfor %}
+{% endblock %}

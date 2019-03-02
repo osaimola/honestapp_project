@@ -1,0 +1,19 @@
+{% extends 'honest/themedbase.html' %}
+
+{% block title_block %}
+    <title>Register</title>
+{% endblock %}
+
+{% block intro_block %}
+    <h1>Sign up for honest</h1>
+    <p>Start helping honest people around you</p>
+{% endblock %}
+
+{% block body_block %}
+    <form method="post" action=".">
+        {%csrf_token%}
+    {{form.as_p}}
+        <input type="submit" value="Register">
+        
+        </form>
+{% endblock %}
