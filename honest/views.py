@@ -7,8 +7,8 @@ from django.urls import reverse
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 
-from honest.models import Category, Person, Area
-from honest.forms import CategoryForm, AreaForm, PersonForm, UserForm
+from honest.models import Category, Person, Area, Review, UserProfile
+from honest.forms import CategoryForm, AreaForm, PersonForm, UserForm, ReviewsForm
 
 
 # Create your views here.
@@ -133,46 +133,75 @@ def category_in_area(request, area_slug, category_slug):
 
 # TODO find out why this_person.views does not display correct value if info is changed in the DB
 def person(request, area_slug, category_slug, person_id):
-    context = {}
-    this_person = Person.objects.get(pk=person_id)
-    context['person'] = this_person
-    this_persons_views = this_person.views
+    if request.method == 'POST':
+        form = ReviewsForm(request.POST)
 
-    # use server side cookies to increment the views for this persons profile
-    # check if this user has visited this person before
-    visits = request.session.get('visits')
-    # if user is visiting for first time increment views by 1
-    if not visits:
-        visits = 1
-        this_person.views = F('views') + 1
-        this_person.save()
+        # save review if form is valid
+        if form.is_valid():
+            pending_review = form.save(commit=False)
+            if request.user.is_authenticated:
+                pending_review.person = Person.objects.get(pk = person_id)
+                # pending_review.reviewer = UserProfile.objects.get(pk = request.user.id)
+            pending_review.save()
+            return HttpResponseRedirect(reverse('honest:person', kwargs={'area_slug':area_slug,
+                                                                         'category_slug':category_slug,
+                                                                         'person_id':person_id}))
+        else:
+            print(form.errors)
 
-    reset_last_visit_time = False
+    else:
+        context = {}
+        this_person = Person.objects.get(pk=person_id)
+        context['person'] = this_person
+        this_persons_views = this_person.views
+        reviews = Review.objects.filter(person = this_person)
+        context['reviews'] =  reviews
 
-    last_visit = request.session.get('last_visit')
-    # if a value for the users last visit does not exist, set the current time to their last visit
-    if last_visit:
-        last_visit_time = datetime.strptime(last_visit[:-7], "%Y-%m-%d %H:%M:%S")
+        # TODO try auto fill person and reviewer, take request.user if user is_authenticated and pull person using the
+        #  person_id, then add this to your review form using commit=FALSE and after that save
 
-        if (datetime.now() - last_visit_time).seconds > 5:
-            # increment the number of views if the last visit was over 30 minutes ago
-            visits = visits + 1
+        form = ReviewsForm()
+        context['form'] = form
+
+        # use server side cookies to increment the views for this persons profile
+        # check if this user has visited this person before
+        visits = request.session.get('visits')
+        # TODO try deep copy of total views for display in template to fix the number of views bug
+        # if user is visiting for first time increment views by 1
+        if not visits:
+            visits = 1
             this_person.views = F('views') + 1
             this_person.save()
-            # and update the last visit cookie, too.
+
+        reset_last_visit_time = False
+
+        last_visit = request.session.get('last_visit')
+        # if a value for the users last visit does not exist, set the current time to their last visit
+        if last_visit:
+            last_visit_time = datetime.strptime(last_visit[:-7], "%Y-%m-%d %H:%M:%S")
+
+            if (datetime.now() - last_visit_time).seconds > 5:
+                # increment the number of views if the last visit was over 30 minutes ago
+                visits = visits + 1
+                this_person.views = F('views') + 1
+                this_person.save()
+                # and update the last visit cookie, too.
+                reset_last_visit_time = True
+        else:
+            # Cookie last_visit doesn't exist, so create it to the current date/time.
             reset_last_visit_time = True
-    else:
-        # Cookie last_visit doesn't exist, so create it to the current date/time.
-        reset_last_visit_time = True
 
-    if reset_last_visit_time:
-        now = datetime.now
-        request.session['last_visit'] = str(datetime.now())
-        request.session['visits'] = visits
-    context['visits'] = visits
-    context['this_persons_views'] = this_persons_views
+        if reset_last_visit_time:
+            # now = datetime.now
+            request.session['last_visit'] = str(datetime.now())
+            request.session['visits'] = visits
+        context['visits'] = visits
+        context['this_persons_views'] = this_persons_views
+        context['area_slug'] = area_slug
+        context['category_slug'] = category_slug
+        context['person_id'] = person_id
+        return render(request, 'honest/person.html', context)
 
-    return render(request, 'honest/person.html', context)
 
 
 # login required decorator to ensure only logged in users can access this page

@@ -52,6 +52,7 @@ class Person(models.Model):
     views = models.IntegerField(default=0)
     upvotes = models.IntegerField(default=0)
     downvotes = models.IntegerField(default=0)
+    rating = models.FloatField(default=0)
 
     def __str__(self):
         return self.first_name
@@ -65,8 +66,35 @@ class Person(models.Model):
         """return the weight of all votes, positive if upvotes are more, negative if downvotes are more"""
         return self.upvotes > self.downvotes
 
+    #def set_average_rating(self):
+
+
 
 class UserProfile(User):
 
     def __str__(self):
         return self.username
+
+
+class Review(models.Model):
+    ONE_STAR = 1
+    TWO_STARS = 2
+    THREE_STARS = 3
+    FOUR_STARS = 4
+    FIVE_STARS = 5
+
+    CHOICE_SET = (
+        (ONE_STAR, "1 Star"),
+        (TWO_STARS, "2 Stars"),
+        (THREE_STARS, "3 Stars"),
+        (FOUR_STARS, "4 Stars"),
+        (FIVE_STARS, "5 Stars"),
+    )
+    person = models.ForeignKey(Person, on_delete=models.CASCADE, related_name="person")
+    reviewer = models.ForeignKey(UserProfile ,on_delete=models.CASCADE, blank=True, null=True, related_name="reviewer")
+    rating = models.IntegerField(default=5, choices=CHOICE_SET)
+    summary = models.CharField(max_length=40)
+    review_text = models.CharField(max_length=360, blank=True)
+
+    def __str__(self):
+        return self.summary

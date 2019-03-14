@@ -1,5 +1,5 @@
 from django import forms
-from honest.models import Category, Area, Person, UserProfile
+from honest.models import Category, Area, Person, UserProfile, Review
 
 
 class CategoryForm(forms.ModelForm):
@@ -33,7 +33,7 @@ class PersonForm(forms.ModelForm):
         # point form to this model to populate all its fields
         model = Person
         # exclude fields which users should not be able to influence/interact with
-        exclude = ('date_added', 'views', 'upvotes', 'downvotes',)
+        exclude = ('date_added', 'views', 'upvotes', 'downvotes', 'rating')
 
     def __init__(self, *args, **kwargs):
         # override init to make service and location fields optional
@@ -72,3 +72,10 @@ class UserForm(forms.ModelForm):
     class Meta:
         model = UserProfile
         fields = ('username', 'first_name', 'email', 'password')
+
+
+class ReviewsForm(forms.ModelForm):
+
+    class Meta:
+        model = Review
+        fields = ( 'rating', 'summary', 'review_text')

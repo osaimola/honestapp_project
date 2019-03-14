@@ -20,6 +20,21 @@
     Upvotes: {{person.upvotes}}<br>
     Downvotes: {{person.downvotes}}<br><br>
 
+        {% for review in reviews %}
+            {{review.rating}}{{review.summary}}{{review.review_text}}
+            <br>
+        {% endfor %}
+
+        <form action="{% url 'honest:person' area_slug category_slug person_id %}" id="review_form" method="post">
+            {% csrf_token %}
+            {{form.as_p}}
+
+            {% if form.errors %}
+            {{form.errors}}
+        {% endif %}
+            <input type="submit" name="submit" value="submit review">
+        </form><br><br>
+
     On honest since {{person.date_added}}<br>
         {{person.views}} people have viewed this person.</p>
 {% endblock %}
