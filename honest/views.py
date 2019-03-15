@@ -131,7 +131,6 @@ def category_in_area(request, area_slug, category_slug):
     return render(request, 'honest/category_in_area.html', context)
 
 
-# TODO find out why this_person.views does not display correct value if info is changed in the DB
 def person(request, area_slug, category_slug, person_id):
     if request.method == 'POST':
         form = ReviewsForm(request.POST)
@@ -155,7 +154,7 @@ def person(request, area_slug, category_slug, person_id):
         context['person'] = this_person
         this_persons_views = this_person.views
         reviews = Review.objects.filter(person = this_person)
-        context['reviews'] =  reviews
+        context['reviews'] = reviews
 
         form = ReviewsForm()
         context['form'] = form
@@ -163,7 +162,6 @@ def person(request, area_slug, category_slug, person_id):
         # use server side cookies to increment the views for this persons profile
         # check if this user has visited this person before
         visits = request.session.get('visits')
-        # TODO try deep copy of total views for display in template to fix the number of views bug
         # if user is visiting for first time increment views by 1
         if not visits:
             visits = 1
