@@ -157,9 +157,6 @@ def person(request, area_slug, category_slug, person_id):
         reviews = Review.objects.filter(person = this_person)
         context['reviews'] =  reviews
 
-        # TODO try auto fill person and reviewer, take request.user if user is_authenticated and pull person using the
-        #  person_id, then add this to your review form using commit=FALSE and after that save
-
         form = ReviewsForm()
         context['form'] = form
 
@@ -212,11 +209,13 @@ def add_person(request):
 
         # check if form is valid and & save a new person if it is
         if form.is_valid():
-            form.save(commit=True)
+            pending_person = form.save(commit=False)
+            pending_person.save()
 
-            # TODO modify this to take user to the newly added person page
             # easy fix use commit false, grab user ID, save, use ID to redirect
-            return HttpResponseRedirect(reverse('honest:index'))
+            return HttpResponseRedirect(reverse('honest:person', kwargs={'area_slug':pending_person.location,
+                                                                         'category_slug':pending_person.service,
+                                                                         'person_id':pending_person.id}))
         else:
             print(form.errors)
     else:
