@@ -66,8 +66,8 @@ class Person(models.Model):
         """return the weight of all votes, positive if upvotes are more, negative if downvotes are more"""
         return self.upvotes > self.downvotes
 
-    #def set_average_rating(self):
-
+    # TODO define function to calculate the average rating of each person and store as float
+    # def set_average_rating(self):
 
 
 class UserProfile(User):
@@ -91,10 +91,11 @@ class Review(models.Model):
         (FIVE_STARS, "5 Stars"),
     )
     person = models.ForeignKey(Person, on_delete=models.CASCADE, related_name="person")
-    reviewer = models.ForeignKey(UserProfile ,on_delete=models.CASCADE, blank=True, null=True, related_name="reviewer")
+    reviewer = models.ForeignKey(UserProfile, on_delete=models.CASCADE, blank=True, null=True, related_name="reviewer")
     rating = models.IntegerField(default=5, choices=CHOICE_SET)
     summary = models.CharField(max_length=40)
     review_text = models.CharField(max_length=360, blank=True)
+    date_added = models.DateField(auto_now_add=True)
 
     def __str__(self):
         return self.summary

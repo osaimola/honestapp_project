@@ -1,17 +1,21 @@
-{% extends 'honest/base.html' %}
+{% extends 'honest/themedbase.html' %}
 
 {% block title_block %}
     <title>Login - Honest</title>
 {% endblock %}
 
+{% block intro_block %}
+    <h1>Login</h1>
+    <p>Not  a member? <a href="{% url 'honest:register' %}">Register</a>!</p>
+{% endblock %}
+
 {% block body_block %}
-    <h1>Login to Honest</h1>
     <form action="/honest/login/" id="login_form" method="post">
         {% csrf_token %}
         Username: <input type="text" name="username" value="" size="50"/>
         <br>
         Password: <input type="password" name="password" value="" size="50"/>
         <br>
-        <input type="submit" value="submit"/>
+        <input type="submit" value="Log In"/>
     </form>
 {% endblock %}

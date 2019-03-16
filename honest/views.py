@@ -140,7 +140,7 @@ def person(request, area_slug, category_slug, person_id):
             pending_review = form.save(commit=False)
             if request.user.is_authenticated:
                 pending_review.person = Person.objects.get(pk = person_id)
-                # pending_review.reviewer = UserProfile.objects.get(pk = request.user.id)
+                pending_review.reviewer = UserProfile.objects.get(pk = request.user.id)
             pending_review.save()
             return HttpResponseRedirect(reverse('honest:person', kwargs={'area_slug':area_slug,
                                                                          'category_slug':category_slug,
@@ -227,7 +227,7 @@ def about(request):
     return render(request, 'honest/about.html', {})
 
 
-"""def register(request):
+def register(request):
     registered = False
 
     if request.method == 'POST':
@@ -245,10 +245,10 @@ def about(request):
     else:
         form = UserForm()
 
-    return render(request, 'honest/register.html', {'form': form, 'registered': registered})"""
+    return render(request, 'honest/register.html', {'form': form, 'registered': registered})
 
 
-"""def user_login(request):
+def user_login(request):
     if request.method == 'POST':
         # get username and password from form using POST.get() which returns None if value doesnt exist
         username = request.POST.get('username')
@@ -275,13 +275,12 @@ def about(request):
     # if methos is not post, then show template with form
     # no form template because form is handled completely in template as opposed to the modelform method
     else:
-        return render(request, 'honest/login.html', {})"""
+        return render(request, 'honest/login.html', {})
 
 
 # login required decorator to ensure only logged in users can access this page
-"""@login_required()
+@login_required()
 def user_logout(request):
     # user will always be logged in before reaching here
     logout(request)
-    # TODO fix redirect error for logout view
-    return redirect('index')"""
+    return redirect('honest:index')

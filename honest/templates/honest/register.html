@@ -1,7 +1,12 @@
-{% extends 'honest/base.html' %}
+{% extends 'honest/themedbase.html' %}
 
 {% block title_block%}
     <title>Sign Up - Honest</title>
+{% endblock %}
+
+{% block intro_block %}
+    <h1>Sign up for honest</h1>
+    <p>Start helping honest people around you</p>
 {% endblock %}
 
 {% block body_block %}
@@ -9,8 +14,6 @@
         Sign Up <strong>Successful</strong> <br>
         <a href="/honest/">Back to homepage</a>
     {% else %}
-        <h1>Sign Up To Honest</h1>
-        <p>Start helping honest people around you</p>
             <form action="/honest/register/" method="post" id="register_form">
 
                 {% csrf_token%}

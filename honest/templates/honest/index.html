@@ -24,7 +24,7 @@
         <div class="one-third"><a href="{% url 'honest:add_area' %}">Add an area</a></div>
         <div class="one-third"><a href="{% url 'honest:add_category' %}">Add a category</a></div>
     {% else %}
-        <p><a href="{% url 'auth_login' %}">Sign in</a> to add a person, area or category</p>
+        <p><a href="{% url 'honest:login' %}">Sign in</a> to add a person, area or category</p>
     {% endif %}
 {% endblock %}
 

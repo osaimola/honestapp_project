@@ -13,7 +13,7 @@
     {% if user.is_authenticated %}
         <a href="{% url 'honest:add_category' %}"><h2>Add an area</h2></a>
     {% else %}
-        <p><a href="{% url 'auth_login' %}">Sign in</a> to add an area.</p>
+        <p><a href="{% url 'honest:login' %}">Sign in</a> to add an area.</p>
     {% endif %}
 
     {% if areas %}
