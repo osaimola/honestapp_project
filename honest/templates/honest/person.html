@@ -20,10 +20,19 @@
     Upvotes: {{person.upvotes}}<br>
     Downvotes: {{person.downvotes}}<br><br>
 
+        <h2>Reviews</h2>
         {% for review in reviews %}
             {{review.rating}}{{review.summary}}{{review.review_text}}
             <br>
         {% endfor %}
+
+        <br>
+        {% if user.is_authenticated %}
+        <p>Reviewing as {{user.username}}</p>
+        {% else %}
+        <p>Reviewing as Anonymous, <a href="{% url 'honest:login' %}">sign in</a> to review with your ID.</p>
+        {% endif %}
+
 
         <form action="{% url 'honest:person' area_slug category_slug person_id %}" id="review_form" method="post">
             {% csrf_token %}

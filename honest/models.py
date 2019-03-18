@@ -67,13 +67,18 @@ class Person(models.Model):
         """return the weight of all votes, positive if upvotes are more, negative if downvotes are more"""
         return self.upvotes > self.downvotes
 
-    # TODO define function to calculate the average rating of each person and store as float
     def set_average_rating(self):
         if self.review_set.all():
             rating_sum = self.review_set.all().aggregate(Sum('rating'))['rating__sum']
             rating_count = self.review_set.all().count()
-            self.rating =  rating_sum/rating_count
+            self.rating =  round(rating_sum/rating_count, 2)
             self.save()
+
+    def avg_rating(self):
+        if self.rating == 0.0:
+            return 'Not Yet Rated'
+        else:
+            return self.rating
 
 
 class UserProfile(User):
