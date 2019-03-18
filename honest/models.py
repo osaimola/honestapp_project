@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User
 from django.db import models
 from django.core.validators import MinLengthValidator
+from django.db.models import Sum
 from django.utils import timezone
 from django.template.defaultfilters import slugify
 import datetime
@@ -67,7 +68,12 @@ class Person(models.Model):
         return self.upvotes > self.downvotes
 
     # TODO define function to calculate the average rating of each person and store as float
-    # def set_average_rating(self):
+    def set_average_rating(self):
+        if self.review_set.all():
+            rating_sum = self.review_set.all().aggregate(Sum('rating'))['rating__sum']
+            rating_count = self.review_set.all().count()
+            self.rating =  rating_sum/rating_count
+            self.save()
 
 
 class UserProfile(User):
@@ -90,8 +96,8 @@ class Review(models.Model):
         (FOUR_STARS, "4 Stars"),
         (FIVE_STARS, "5 Stars"),
     )
-    person = models.ForeignKey(Person, on_delete=models.CASCADE, related_name="person")
-    reviewer = models.ForeignKey(UserProfile, on_delete=models.CASCADE, blank=True, null=True, related_name="reviewer")
+    person = models.ForeignKey(Person, on_delete=models.CASCADE, related_name="review_set")
+    reviewer = models.ForeignKey(UserProfile, on_delete=models.CASCADE, blank=True, null=True, related_name="reviews")
     rating = models.IntegerField(default=5, choices=CHOICE_SET)
     summary = models.CharField(max_length=40)
     review_text = models.CharField(max_length=360, blank=True)

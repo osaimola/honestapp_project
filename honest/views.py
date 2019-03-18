@@ -34,6 +34,10 @@ def category(request, category_slug):
         context['people'] = people
         context['category'] = category
 
+        this_categorys_views = category.views
+        context['this_categorys_views'] = this_categorys_views
+        count_page_views(request=request, object=category)
+
         # make empty list of locations and populate with locations people are  in
         areas = []
         for person in people:
@@ -81,6 +85,8 @@ def area(request, area_slug):
     context['area'] = area
     people = Person.objects.filter(location=area)
     context['people'] = people
+    this_areas_views = area.views
+    context['this_areas_views'] = this_areas_views
 
     # make empty list of categories and populate with the services people in this area provide
     categories = []
@@ -88,7 +94,7 @@ def area(request, area_slug):
         if person.service not in categories:
             categories.append(person.service)
     context['categories'] = categories
-
+    count_page_views(request=request, object=area)
     return render(request, 'honest/area.html', context)
 
 
@@ -132,6 +138,7 @@ def category_in_area(request, area_slug, category_slug):
 
 
 def person(request, area_slug, category_slug, person_id):
+    this_person = Person.objects.get(pk=person_id)
     if request.method == 'POST':
         form = ReviewsForm(request.POST)
 
@@ -142,16 +149,14 @@ def person(request, area_slug, category_slug, person_id):
                 pending_review.person = Person.objects.get(pk = person_id)
                 pending_review.reviewer = UserProfile.objects.get(pk = request.user.id)
             pending_review.save()
+            this_person.set_average_rating()
             return HttpResponseRedirect(reverse('honest:person', kwargs={'area_slug':area_slug,
                                                                          'category_slug':category_slug,
                                                                          'person_id':person_id}))
         else:
             print(form.errors)
-
     else:
-        context = {}
-        this_person = Person.objects.get(pk=person_id)
-        context['person'] = this_person
+        context = {'person': this_person}
         this_persons_views = this_person.views
         reviews = Review.objects.filter(person = this_person)
         context['reviews'] = reviews
@@ -159,44 +164,45 @@ def person(request, area_slug, category_slug, person_id):
         form = ReviewsForm()
         context['form'] = form
 
-        # use server side cookies to increment the views for this persons profile
-        # check if this user has visited this person before
-        visits = request.session.get('visits')
-        # if user is visiting for first time increment views by 1
-        if not visits:
-            visits = 1
-            this_person.views = F('views') + 1
-            this_person.save()
-
-        reset_last_visit_time = False
-
-        last_visit = request.session.get('last_visit')
-        # if a value for the users last visit does not exist, set the current time to their last visit
-        if last_visit:
-            last_visit_time = datetime.strptime(last_visit[:-7], "%Y-%m-%d %H:%M:%S")
-
-            if (datetime.now() - last_visit_time).seconds > 5:
-                # increment the number of views if the last visit was over 30 minutes ago
-                visits = visits + 1
-                this_person.views = F('views') + 1
-                this_person.save()
-                # and update the last visit cookie, too.
-                reset_last_visit_time = True
-        else:
-            # Cookie last_visit doesn't exist, so create it to the current date/time.
-            reset_last_visit_time = True
-
-        if reset_last_visit_time:
-            # now = datetime.now
-            request.session['last_visit'] = str(datetime.now())
-            request.session['visits'] = visits
-        context['visits'] = visits
+        count_page_views(request=request, object=this_person)
+        #context['visits'] = visits
         context['this_persons_views'] = this_persons_views
         context['area_slug'] = area_slug
         context['category_slug'] = category_slug
         context['person_id'] = person_id
         return render(request, 'honest/person.html', context)
 
+
+def count_page_views(request, object):
+    """this function uses server side cookies to count the views for the object provided
+    object model must have a views field which takes an integer"""
+
+    # check if this user has visited this person before
+    visits = request.session.get('visits')
+    # if user is visiting for first time increment views by 1
+    if not visits:
+        visits = 1
+        object.views = F('views') + 1
+        object.save()
+    reset_last_visit_time = False
+    last_visit = request.session.get('last_visit')
+    # if a value for the users last visit does not exist, set the current time to their last visit
+    if last_visit:
+        last_visit_time = datetime.strptime(last_visit[:-7], "%Y-%m-%d %H:%M:%S")
+
+        if (datetime.now() - last_visit_time).seconds > 5:
+            # increment the number of views if the last visit was over 5 minutes ago
+            visits = visits + 1
+            object.views = F('views') + 1
+            object.save()
+            # and update the last visit cookie, too.
+            reset_last_visit_time = True
+    else:
+        # Cookie last_visit doesn't exist, so create it to the current date/time.
+        reset_last_visit_time = True
+    if reset_last_visit_time:
+        request.session['last_visit'] = str(datetime.now())
+        request.session['visits'] = visits
 
 
 # login required decorator to ensure only logged in users can access this page
