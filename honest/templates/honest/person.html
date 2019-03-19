@@ -17,16 +17,26 @@
     <h2>{{person.service}} in {{person.location}}</h2>
     <p>Phone Number: {{person.phone_number}}<br>
     Email: {{person.email}}<br>
-    Upvotes: {{person.upvotes}}<br>
-    Downvotes: {{person.downvotes}}<br><br>
+    {% if person.avg_rating >= 1 %}
+        Rated {{person.avg_rating}} out of 5
+        {% else %}
+        No rating available. Be the first to give {{person.first_name}} a review
+        {% endif %}<br><br>
 
         <h2>Reviews</h2>
-        {% for review in reviews %}
-            {{review.rating}}{{review.summary}}{{review.review_text}}
-            <br>
-        {% endfor %}
+        {% if reviews %}
+            {% for review in reviews %}
+                <b>{% if review.reviewer == None %}Anonymous{% else %}{{review.reviewer}}{% endif %}</b>
+                <br>
+                <b>{{review.summary}}</b>
+                <br>
+                {{review.rating}} out of 5
+                <br>
+                {{review.review_text}}
+                <br><br>
+            {% endfor %}
+        {% endif %}
 
-        <br>
         {% if user.is_authenticated %}
         <p>Reviewing as {{user.username}}</p>
         {% else %}

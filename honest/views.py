@@ -145,8 +145,8 @@ def person(request, area_slug, category_slug, person_id):
         # save review if form is valid
         if form.is_valid():
             pending_review = form.save(commit=False)
+            pending_review.person = Person.objects.get(pk=person_id)
             if request.user.is_authenticated:
-                pending_review.person = Person.objects.get(pk = person_id)
                 pending_review.reviewer = UserProfile.objects.get(pk = request.user.id)
             pending_review.save()
             this_person.set_average_rating()
