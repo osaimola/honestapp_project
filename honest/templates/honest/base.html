@@ -1,14 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
-
-    {% load static %}
-    <link rel="stylesheet" type="text/css" href="{% static 'honest/style.css' %}" />
-<head>
-    <meta charset="UTF-8">
+  {% load static %}
+  <link
+    rel="stylesheet"
+    type="text/css"
+    href="{% static 'honest/style.css' %}"
+  />
+  <head>
+    <meta charset="UTF-8" />
     {% block title_block %}{% endblock %}
-</head>
-<body>
+  </head>
+  <body>
     {% block body_block %} {% endblock %}
     <hr />
-</body>
+  </body>
 </html>

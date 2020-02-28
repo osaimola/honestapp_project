@@ -1,29 +1,30 @@
-{% extends 'honest/themedbase.html' %}
-
-{% block title_block%}
-    <title>Sign Up - Honest</title>
-{% endblock %}
-
-{% block intro_block %}
-    <h1>Sign up for honest</h1>
-    <p>Start helping honest people around you</p>
-{% endblock %}
-
-{% block body_block %}
-    {% if registered %}
-        Sign Up <strong>Successful</strong> <br>
-        <a href="/honest/">Back to homepage</a>
-    {% else %}
-            <form action="/honest/register/" method="post" id="register_form">
-
-                {% csrf_token%}
-                {% for field in form %}
-                    <div class="fieldWrapper">
-                    {{ field.errors }}
-                    {{ field.label_tag }} {{ field }}
-                    </div>
-                {% endfor %}
-                <input type="submit" name="submit" value="Sign Up">
-            </form>
-    {% endif %}
-{% endblock %}
+{% extends 'honest/themedbase.html' %} {% block title_block%}
+<title>Sign Up - Honest</title>
+{% endblock %} {% block intro_block %}
+<h1 class="text-info text-center">Sign up for honest</h1>
+<p class="text-center">Start helping honest people around you</p>
+{% endblock %} {% block body_block %} {% if registered %}
+<p class="lead text-center m-4">Sign Up <strong>Successful</strong></p>
+<br />
+<div class="text-center">
+  <a class="text-decoration-none btn-info p-2 rounded" href="/honest/"
+    >Back to homepage</a
+  >
+</div>
+{% else %}
+<form class="m-4" action="/honest/register/" method="post" id="register_form">
+  {% csrf_token%} {% for field in form %}
+  <div class="form-group">
+    <div class="fieldWrapper">
+      {{ field.errors }} {{ field.label_tag }} {{ field }}
+    </div>
+  </div>
+  {% endfor %}
+  <input
+    class="btn btn-info rounded p-2"
+    type="submit"
+    name="submit"
+    value="Sign Up"
+  />
+</form>
+{% endif %} {% endblock %}

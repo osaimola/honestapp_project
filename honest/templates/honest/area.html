@@ -1,52 +1,83 @@
-{% extends 'honest/themedbase.html' %}
+{% extends 'honest/themedbase.html' %} {% block title_block %} {% if area %}
+<title>{{area.state}} - Honest</title>
+{% else %}
+<title>Location Not Found - Honest</title>
+{% endif %} {% endblock %} {% block intro_block %}
+<h1 class="text-info text-center">Honest People in {{area.state}}</h1>
+{% if user.is_authenticated %}
+<div class="row">
+  <div class="col">
+    <a
+      class="text-info text-decoration-none"
+      href="{% url 'honest:add_person' %}"
+      >Add a person</a
+    >
+  </div>
+  <div class="col">
+    <a class="text-info text-decoration-none" href="{% url 'honest:add_area' %}"
+      >Add an area</a
+    >
+  </div>
+  <div class="col">
+    <a
+      class="text-info text-decoration-none"
+      href="{% url 'honest:add_category' %}"
+      >Add a category</a
+    >
+  </div>
+</div>
+{% else %}
+<p class="text-muted text-center">
+  <a class="text-decoration-none" href="{% url 'honest:login' %}">Sign in</a> to
+  add a person, area or category
+</p>
+{% endif %} {% endblock %} {% block body_block %} {% if area %} {% if people %}
+<!-- display people in this area -->
+<div class="card-deck">
+  {% for person in people %}
 
-{% block title_block %}
-    {% if area %}
-    <title>{{area.state}} - Honest</title>
-    {% else %}
-    <title>Location Not Found - Honest</title>
-    {% endif %}
-{% endblock %}
+  <div class="card border-secondary mb-3" style="max-width: 18rem;">
+    <div class="card-header" style="background-color: #e3f2fd;">
+      {{person.service}} in {{person.location}}
+    </div>
+    <div class="card-body text-dark">
+      <h5 class="card-title">
+        <a
+          class="text-decoration-none
+        "
+          href="{% url 'honest:person' person.location person.service person.id %}"
+          >{{person.first_name}}, {{person.last_name}}.</a
+        >
+      </h5>
+      <p class="card-text">
+        Contact: {{person.phone_number}} <br />Email: {{person.email}}
+        <br />Rating: {{person.avg_rating}}
+      </p>
+    </div>
+  </div>
 
-{% block intro_block %}
-    <h1>Honest People in {{area.state}}</h1>
-    {% if user.is_authenticated %}
-        <div class="one-third first"><a href="{% url 'honest:add_person' %}">Add a person</a></div>
-        <div class="one-third"><a href="{% url 'honest:add_area' %}">Add an area</a></div>
-        <div class="one-third"><a href="{% url 'honest:add_category' %}">Add a category</a></div>
-    {% else %}
-        <p><a href="{% url 'honest:login' %}">Sign in</a> to add a person, area or category</p>
-    {% endif %}
-{% endblock %}
+  {% endfor %}
+</div>
 
-{% block body_block %}
-    {% if area %}
-    {% if people %}
-        <!-- display people in this area -->
-        {% for person in people %}
-            <a href="{% url 'honest:person' person.location person.service person.id %}">{{person.first_name}}, {{person.last_name}}.</a>
-            <br>{{person.service}} in {{person.location}}
-            <br>Contact: {{person.phone_number}}
-            <br>Email: {{person.email}}
-            <br>Rating: {{person.avg_rating}}
-            <br><br>
-        {% endfor %}
+<!-- display all categories with people in this area -->
+<h2 class="text-info">View services provided in {{area.state}}</h2>
+<ul class="list-unstyled">
+  {% for category in categories %}
+  <li>
+    <a
+      class="text-decoration-none"
+      href="{% url 'honest:category_in_area' area.slug category.slug %}"
+      >{{category.category}}</a
+    >
+  </li>
+  {% endfor %}
+</ul>
 
-        <!-- display all categories with people in this area -->
-        <h2>View services provided in {{area.state}}</h2>
-        <ul>
-            {% for  category in categories %}
-            <li><a href="{% url 'honest:category_in_area' area.slug category.slug %}">{{category.category}}</a> </li>
-            {% endfor %}
-        </ul>
-
-    {% else %}
-        No Honest People Here Yet :(
-    <br><br>
-    {% endif %}
-
-    {{this_areas_views}} people viewed this page.
-    {% else %}
-        No matching area found.
-    {% endif %}
-{% endblock %}
+{% else %}
+<p class="text-center">No Honest People Here Yet :(</p>
+<br /><br />
+{% endif %}
+<p>Page views <span class="badge badge-info">{{this_areas_views}}</span></p>
+{% else %}
+<p class="text-center">No matching area found.</p>
+{% endif %} {% endblock %}

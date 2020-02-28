@@ -1,52 +1,79 @@
-{% extends 'honest/themedbase.html' %}
-
-{% block title_block %}
-    {% if category %}
-        <title>{{category_name}} - Honest</title>
-    {% else %}
-        <title> Category Not Found - Honest</title>
-    {% endif %}
-{% endblock %}
-
-{% block intro_block %}
-    <h1> Honest {{category.category}} People</h1>
-    {% if user.is_authenticated %}
-        <div class="one-third first"><a href="{% url 'honest:add_person' %}">Add a person</a></div>
-        <div class="one-third"><a href="{% url 'honest:add_area' %}">Add an area</a></div>
-        <div class="one-third"><a href="{% url 'honest:add_category' %}">Add a category</a></div>
-    {% else %}
-        <p><a href="{% url 'honest:login' %}">Sign in</a> to add a person, area or category</p>
-    {% endif %}
-{% endblock %}
-
-{% block body_block %}
-{% if category %}
-    {% if people %}
-        <!-- display people in this category -->
-        {% for person in people %}
-<a href="{% url 'honest:person' person.location person.service person.id %}">{{person.first_name}}, {{person.last_name}}.</a>
-            <br>{{person.service}} in {{person.location}}
-            <br>Contact: {{person.phone_number}}
-            <br>Email: {{person.email}}
-            <br>Rating: {{person.avg_rating}}
-            <br><br>
-        {% endfor %}
-
-        <!-- display all areas with people in this category -->
-        <h2>View {{category.category}} by location</h2>
-        <ul>
-            {% for  area in areas %}
-            <li><a href="/honest/{{area.slug}}/{{category.slug}}/">{{area.state}}</a> </li>
-            {% endfor %}
-        </ul>
-
-    {% else %}
-        No Honest People Offer This Service Yet :(
-        <br><br>
-    {% endif %}
-
-    {{this_categorys_views}} people viewed this page.
+{% extends 'honest/themedbase.html' %} {% block title_block %} {% if category %}
+<title>{{category_name}} - Honest</title>
 {% else %}
-    No matching category found.
+<title>Category Not Found - Honest</title>
+{% endif %} {% endblock %} {% block intro_block %}
+<h1 class="text-info text-center">Honest {{category.category}} People</h1>
+{% if user.is_authenticated %}
+<div class="row">
+  <div class="col">
+    <a
+      class="text-info text-decoration-none"
+      href="{% url 'honest:add_person' %}"
+      >Add a person</a
+    >
+  </div>
+  <div class="col">
+    <a class="text-info text-decoration-none" href="{% url 'honest:add_area' %}"
+      >Add an area</a
+    >
+  </div>
+  <div class="col">
+    <a
+      class="text-info text-decoration-none"
+      href="{% url 'honest:add_category' %}"
+      >Add a category</a
+    >
+  </div>
+</div>
+{% else %}
+<p class="text-center">
+  <a class="text-decoration-none" href="{% url 'honest:login' %}">Sign in</a> to
+  add a person, area or category
+</p>
+{% endif %} {% endblock %} {% block body_block %}{% if category %} {%if people%}
+<!-- display people in this category -->
+{% for person in people %}
+
+<div class="card border-secondary mb-3" style="max-width: 18rem;">
+  <div class="card-header" style="background-color: #e3f2fd;">
+    {{person.service}} in {{person.location}}
+  </div>
+  <div class="card-body text-dark">
+    <h5 class="card-title">
+      <a
+        class="text-decoration-none
+        "
+        href="{% url 'honest:person' person.location person.service person.id %}"
+        >{{person.first_name}}, {{person.last_name}}.</a
+      >
+    </h5>
+    <p class="card-text">
+      Contact: {{person.phone_number}} <br />Email: {{person.email}}
+      <br />Rating: {{person.avg_rating}}
+    </p>
+  </div>
+</div>
+
+{% endfor %}
+
+<!-- display all areas with people in this category -->
+<h2 class="text-info">View {{category.category}} by location</h2>
+<ul class="link-unstyled">
+  {% for area in areas %}
+  <li>
+    <a
+      class="text-decoration-none"
+      href="/honest/{{area.slug}}/{{category.slug}}/"
+      >{{area.state}}</a
+    >
+  </li>
+  {% endfor %}
+</ul>
+{% else %}
+<p class="text-center">No people here yet :(</p>
 {% endif %}
-{% endblock %}
+<p>Page views <span class="badge badge-info">{{this_categorys_views}}</span></p>
+{% else %}
+<p class="text-center">No matching category found.</p>
+{% endif %} {% endblock %}

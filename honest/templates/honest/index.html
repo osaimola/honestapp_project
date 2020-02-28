@@ -6,36 +6,45 @@
 {% endblock %}
 
 {% block intro_block %}
-    <h1>Honest</h1>
+
+<div class="row">
+    <div class="col">
+    <h1 class="text-center text-info">Honest</h1>
 
     <!-- show welcome message if user is logged in-->
-    <p>
+    <p class="lead text-center">
         {% if user.is_authenticated %}
-        <b>Welcome, {{user.username}}</b>
+        <strong>Welcome, {{user.username}}</strong>
         <br>
         {% endif %}
         {{ honest_message }}
         </br>
-        stay <b>straight</b>, it pays!
+        stay <strong>straight</strong>, it pays!
     </p>
 
     {% if user.is_authenticated %}
-        <div class="one-third first"><a href="{% url 'honest:add_person' %}">Add a person</a></div>
-        <div class="one-third"><a href="{% url 'honest:add_area' %}">Add an area</a></div>
-        <div class="one-third"><a href="{% url 'honest:add_category' %}">Add a category</a></div>
+    <div class="row">
+        <div class="col"><a class="text-info text-decoration-none" href="{% url 'honest:add_person' %}">Add a person</a></div>
+        <div class="col"><a class="text-info text-decoration-none" href="{% url 'honest:add_area' %}">Add an area</a></div>
+        <div class="col"><a class="text-info text-decoration-none" href="{% url 'honest:add_category' %}">Add a category</a></div>
+        </div>
     {% else %}
-        <p><a href="{% url 'honest:login' %}">Sign in</a> to add a person, area or category</p>
+        <p class="text-muted text-center"><a class="text-decoration-none" href="{% url 'honest:login' %}">Sign in</a> to add a person, area or category</p>
     {% endif %}
+    </div></div>
 {% endblock %}
 
 {% block body_block %}
     <!-- display categories-->
-    <div class="one-half first">
-        <a href="{% url 'honest:all_categories' %}"><h2>Categories</h2></a>
+    
+    <div class="container">
+        <div class="row">
+    <div class="col text-center">
+        <a class="text-decoration-none" href="{% url 'honest:all_categories' %}"><h2 class="text-info">Categories</h2></a>
         {% if categories %}
-        <ul>
+        <ul class="list-unstyled">
             {% for category in categories %}
-            <li><a href="{% url 'honest:category' category.slug %}">{{category.category}}</a></li>
+            <li><a class="text-decoration-none" href="{% url 'honest:category' category.slug %}">{{category.category}}</a></li>
             {%endfor%}
         </ul>
             {% if categories.count > 9 %}
@@ -47,12 +56,12 @@
     </div>
 
     <!-- display areas -->
-    <div class="one-half">
-        <a href="{% url 'honest:all_areas' %}"><h2>Areas</h2></a>
+    <div class="col text-center">
+        <a class="text-decoration-none" href="{% url 'honest:all_areas' %}"><h2 class="text-info">Areas</h2></a>
         {% if areas %}
-        <ul>
+        <ul class="list-unstyled">
             {% for area in areas %}
-            <li><a href="{% url 'honest:area' area.slug %}">{{area.state}}</a></li>
+            <li><a class="text-decoration-none" href="{% url 'honest:area' area.slug %}">{{area.state}}</a></li>
             {% endfor %}
         </ul>
             {% if areas.count > 9 %}
@@ -62,6 +71,7 @@
             No Areas available.
         {% endif %}
     </div>
+    </div></div>
 
     <!--- <img src="{%static 'honest/images/logoidea.jpg'%}" alt="honest logo"/> --->
 {% endblock %}

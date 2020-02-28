@@ -1,21 +1,39 @@
-{% extends 'honest/themedbase.html' %}
+{% extends 'honest/themedbase.html' %} {% block title_block %}
+<title>Login - Honest</title>
+{% endblock %} {% block intro_block %}
+<h1 class="text-info text-center">Login</h1>
+<p class="text-center">
+  Not a member?
+  <a class="text-decoration-none" href="{% url 'honest:register' %}">Register</a
+  >!
+</p>
+{% endblock %} {% block body_block %}
+<form class="m-4" action="/honest/login/" id="login_form" method="post">
+  {% csrf_token %}
+  <div class="form-group">
+    <label for="Username">Username</label>
+    <input
+      class="form-control"
+      placeholder="username"
+      aria-describedby="usernameHelp"
+      type="text"
+      name="username"
+      value=""
+      size="50"
+    />
+  </div>
 
-{% block title_block %}
-    <title>Login - Honest</title>
-{% endblock %}
-
-{% block intro_block %}
-    <h1>Login</h1>
-    <p>Not  a member? <a href="{% url 'honest:register' %}">Register</a>!</p>
-{% endblock %}
-
-{% block body_block %}
-    <form action="/honest/login/" id="login_form" method="post">
-        {% csrf_token %}
-        Username: <input type="text" name="username" value="" size="50"/>
-        <br>
-        Password: <input type="password" name="password" value="" size="50"/>
-        <br>
-        <input type="submit" value="Log In"/>
-    </form>
+  <div class="form-group">
+    <label for="Password">Password</label
+    ><input
+      class="form-control"
+      type="password"
+      placeholder="Password"
+      name="password"
+      value=""
+      size="50"
+    />
+  </div>
+  <input class="btn btn-info rounded" type="submit" value="Log In" />
+</form>
 {% endblock %}
