@@ -1,40 +1,41 @@
-h1, h2 {
-color: green
+h1,
+h2 {
+  color: green;
 }
 
 b {
-color: green;
+  color: green;
 }
 
 a {
-font-weight: bold;
-color: green;
+  font-weight: bold;
+  color: green;
 }
 
 /* card layouts */
-.card-container{
-padding: 20px 0;
-display: flex;
-justify-content: flex-start;
-flex-direction: column;
+.card-container {
+  padding: 20px 0;
+  display: flex;
+  justify-content: flex-start;
+  flex-direction: column;
 }
 
-.card{
+.card {
   display: flex;
   width: 400px;
   justify-content: flex-start;
-  margin; 10px, 10px, 10px, 10px;
+  margin: 10px, 10px, 10px, 10px;
   padding-top: 20px;
-  margin-bottom:10px;
+  margin-bottom: 10px;
   align-items: center;
   flex-direction: column;
   border: 1px solid grey;
   border-radius: 5px;
-  box-shadow: 1px 3px 6px #CCC;
+  box-shadow: 1px 3px 6px #ccc;
 }
 
-.card:hover{
+.card:hover {
   background-color: #f2f2f2;
-  border: .5px solid green;
+  border: 0.5px solid green;
 }
 /* card layouts end */
