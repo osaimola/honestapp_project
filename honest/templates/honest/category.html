@@ -33,33 +33,39 @@
 </p>
 {% endif %} {% endblock %} {% block body_block %}{% if category %} {%if people%}
 <!-- display people in this category -->
-{% for person in people %}
+<div class="container">
+  <div class="row d-flex justify-content-center">
+    {% for person in people %}
 
-<div class="card border-secondary mb-3" style="max-width: 18rem;">
-  <div class="card-header" style="background-color: #e3f2fd;">
-    {{person.service}} in {{person.location}}
-  </div>
-  <div class="card-body text-dark">
-    <h5 class="card-title">
-      <a
-        class="text-decoration-none
+    <div class="card border-secondary mb-3" style="max-width: 18rem;">
+      <div class="card-header" style="background-color: #e3f2fd;">
+        {{person.service}} in {{person.location}}
+      </div>
+      <div class="card-body text-dark">
+        <h5 class="card-title">
+          <a
+            class="text-decoration-none
         "
-        href="{% url 'honest:person' person.location person.service person.id %}"
-        >{{person.first_name}}, {{person.last_name}}.</a
-      >
-    </h5>
-    <p class="card-text">
-      Contact: {{person.phone_number}} <br />Email: {{person.email}}
-      <br />Rating: {{person.avg_rating}}
-    </p>
+            href="{% url 'honest:person' person.location person.service person.id %}"
+            >{{person.first_name}}, {{person.last_name}}.</a
+          >
+        </h5>
+        <p class="card-text">
+          Contact: {{person.phone_number}} <br />Email: {{person.email}}
+          <br />Rating: {{person.avg_rating}}
+        </p>
+      </div>
+    </div>
+
+    {% endfor %}
   </div>
 </div>
 
-{% endfor %}
-
 <!-- display all areas with people in this category -->
-<h2 class="text-info">View {{category.category}} by location</h2>
-<ul class="link-unstyled">
+<h2 class="text-info text-center mt-4">
+  View {{category.category}} by location
+</h2>
+<ul class="list-unstyled text-center">
   {% for area in areas %}
   <li>
     <a
@@ -73,7 +79,9 @@
 {% else %}
 <p class="text-center">No people here yet :(</p>
 {% endif %}
-<p>Page views <span class="badge badge-info">{{this_categorys_views}}</span></p>
+<p class="text-center">
+  Page views <span class="badge badge-info">{{this_categorys_views}}</span>
+</p>
 {% else %}
 <p class="text-center">No matching category found.</p>
 {% endif %} {% endblock %}

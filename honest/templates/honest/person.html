@@ -14,37 +14,35 @@
 
 {% block body_block %}
 <div class="col mx-auto">
-    <h1>{{person.first_name}}, {{person.last_name}}</h1>
-    <h2>{{person.service}} in {{person.location}}</h2>
-    <p>Phone Number: {{person.phone_number}}<br>
-    Email: {{person.email}}<br>
+    <h1 class="text-info">{{person.first_name}}, {{person.last_name}}</h1>
+    <h2 class="text-secondary">{{person.service}} in {{person.location}}</h2>
+    <p class="mb-0">Phone Number: {{person.phone_number}}<br>
+    <p class="mb-0">Email: {{person.email}}</p>
     {% if person.avg_rating >= 1 %}
-        Rated {{person.avg_rating}} out of 5
+        <p>Rated <span class="badge badge-info">{{person.avg_rating}}</span> out of 5</p>
         {% else %}
-        No rating available. Be the first to give {{person.first_name}} a review
-        {% endif %}<br><br>
+        <p>No rating available. Be the first to give {{person.first_name}} a review</p>
+        {% endif %}
 
-        <h2>Reviews</h2>
+        <h2 class="text-info mt-4">Reviews</h2>
         {% if reviews %}
             {% for review in reviews %}
-                <b>{% if review.reviewer == None %}Anonymous{% else %}{{review.reviewer}}{% endif %}</b>
-                <br>
-                <b>{{review.summary}}</b>
-                <br>
-                {{review.rating}} out of 5
-                <br>
-                {{review.review_text}}
-                <br><br>
+                <p class="tex-muted mb-0">{% if review.reviewer == None %}Anonymous{% else %}{{review.reviewer}}{% endif %}</p>
+                <p class="h5 mb-0 text-secondary">{{review.summary}}</p>
+                <small class="text-info">{{review.rating}} out of 5 </small>
+                <p>{{review.review_text}}</p>
+                <hr class="py-1 px-4">
             {% endfor %}
         {% endif %}
 
         {% if user.is_authenticated %}
         <p>Reviewing as {{user.username}}</p>
         {% else %}
-        <p>Reviewing as Anonymous, <a href="{% url 'honest:login' %}">sign in</a> to review with your ID.</p>
+        <p>Reviewing as Anonymous, <a class="text-decoration-none" href="{% url 'honest:login' %}">sign in</a> to review with your ID.</p>
         {% endif %}
 
 
+        <div class="form-group">
         <form action="{% url 'honest:person' area_slug category_slug person_id %}" id="review_form" method="post">
             {% csrf_token %}
             {{form.as_p}}
@@ -53,9 +51,11 @@
             {{form.errors}}
         {% endif %}
             <input type="submit" name="submit" value="submit review">
-        </form><br><br>
+        </form>
+        </div>
 
-    On honest since {{person.date_added}}<br>
-        {{this_persons_views}} people have viewed this person.</p>
+    <p class="text-muted">{{person.first_name}} has been on honest since {{person.date_added}}<br>
+        <span class="badge badge-info">{{this_persons_views}}</span> people have viewed this person.</p>
+    </p>
 </div>
 {% endblock %}

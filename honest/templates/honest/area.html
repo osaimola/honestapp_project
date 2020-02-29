@@ -33,35 +33,39 @@
 </p>
 {% endif %} {% endblock %} {% block body_block %} {% if area %} {% if people %}
 <!-- display people in this area -->
-<div class="card-deck">
-  {% for person in people %}
+<div class="container">
+  <div class="row d-flex justify-content-center">
+    {% for person in people %}
 
-  <div class="card border-secondary mb-3" style="max-width: 18rem;">
-    <div class="card-header" style="background-color: #e3f2fd;">
-      {{person.service}} in {{person.location}}
-    </div>
-    <div class="card-body text-dark">
-      <h5 class="card-title">
-        <a
-          class="text-decoration-none
+    <div class="card border-secondary mb-3" style="max-width: 18rem;">
+      <div class="card-header" style="background-color: #e3f2fd;">
+        {{person.service}} in {{person.location}}
+      </div>
+      <div class="card-body text-dark">
+        <h5 class="card-title">
+          <a
+            class="text-decoration-none
         "
-          href="{% url 'honest:person' person.location person.service person.id %}"
-          >{{person.first_name}}, {{person.last_name}}.</a
-        >
-      </h5>
-      <p class="card-text">
-        Contact: {{person.phone_number}} <br />Email: {{person.email}}
-        <br />Rating: {{person.avg_rating}}
-      </p>
+            href="{% url 'honest:person' person.location person.service person.id %}"
+            >{{person.first_name}}, {{person.last_name}}.</a
+          >
+        </h5>
+        <p class="card-text">
+          Contact: {{person.phone_number}} <br />Email: {{person.email}}
+          <br />Rating: {{person.avg_rating}}
+        </p>
+      </div>
     </div>
-  </div>
 
-  {% endfor %}
+    {% endfor %}
+  </div>
 </div>
 
 <!-- display all categories with people in this area -->
-<h2 class="text-info">View services provided in {{area.state}}</h2>
-<ul class="list-unstyled">
+<h2 class="text-info text-center mt-4">
+  View services provided in {{area.state}}
+</h2>
+<ul class="list-unstyled text-center">
   {% for category in categories %}
   <li>
     <a
@@ -77,7 +81,9 @@
 <p class="text-center">No Honest People Here Yet :(</p>
 <br /><br />
 {% endif %}
-<p>Page views <span class="badge badge-info">{{this_areas_views}}</span></p>
+<p class="text-center">
+  Page views <span class="badge badge-info">{{this_areas_views}}</span>
+</p>
 {% else %}
 <p class="text-center">No matching area found.</p>
 {% endif %} {% endblock %}
