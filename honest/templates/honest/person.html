@@ -41,18 +41,37 @@
         <p>Reviewing as Anonymous, <a class="text-decoration-none" href="{% url 'honest:login' %}">sign in</a> to review with your ID.</p>
         {% endif %}
 
-
-        <div class="form-group">
-        <form action="{% url 'honest:person' area_slug category_slug person_id %}" id="review_form" method="post">
+<!-- TODO Investigate how this form is rendered and appply bootstrap styling to it-->
+        
+        <form class="mb-4" action="{% url 'honest:person' area_slug category_slug person_id %}" id="review_form" method="post">
+            
             {% csrf_token %}
-            {{form.as_p}}
-
-            {% if form.errors %}
-            {{form.errors}}
-        {% endif %}
-            <input type="submit" name="submit" value="submit review">
-        </form>
+            
+            <div class="form-group">
+                <label for="id_rating">Rating</label>
+                 <select class="form-control w-25" name="rating" id="id_rating">
+                    <option value="1">1 Star</option>
+                    <option value="2">2 Stars</option>
+                    <option value="3">3 Stars</option>
+                    <option value="4">4 Stars</option>
+                    <option value="5" selected>5 Stars</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="id_summary">Summary</label> <input class="form-control w-50" type="text" name="summary" maxlength="40" required id="id_summary" />
         </div>
+            
+            <div class="form-group">
+            
+            <label for="id_review_text">Review text</label> <input class="form-control w-50" type="text" name="review_text" maxlength="360" id="id_review_text" />
+        </div>
+            
+
+            <input class="btn btn-info p-2" type="submit" name="submit" value="submit review">
+           
+       
+        </form>
+        
 
     <p class="text-muted">{{person.first_name}} has been on honest since {{person.date_added}}<br>
         <span class="badge badge-info">{{this_persons_views}}</span> people have viewed this person.</p>
