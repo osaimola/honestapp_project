@@ -3,7 +3,8 @@ from honest.models import Category, Area, Person, UserProfile, Review
 
 
 class CategoryForm(forms.ModelForm):
-    category = forms.CharField(max_length=100, help_text='Enter the category name. EG Tailor, Mechanic')
+    category = forms.CharField(
+        max_length=100, help_text='Enter the category name. EG Tailor, Mechanic')
     views = forms.IntegerField(widget=forms.HiddenInput(), initial=0)
     slug = forms.CharField(widget=forms.HiddenInput, required=False)
 
@@ -13,7 +14,8 @@ class CategoryForm(forms.ModelForm):
 
 
 class AreaForm(forms.ModelForm):
-    state = forms.CharField(max_length=100, help_text='Enter the State name. EG Lagos, Kaduna')
+    state = forms.CharField(
+        max_length=100, help_text='Enter the State name. EG Lagos, Kaduna')
     views = forms.IntegerField(widget=forms.HiddenInput, required=False)
     slug = forms.CharField(widget=forms.HiddenInput, required=False)
 
@@ -49,14 +51,17 @@ class PersonForm(forms.ModelForm):
         new_location = self.cleaned_data.get('new_location')
         if not service and not new_service:
             # no service was specified
-            raise forms.ValidationError("Must choose what service they provide or specify a new one")
+            raise forms.ValidationError(
+                "Must choose what service they provide or specify a new one")
         elif not service:
             # get or create checks existing categories, if none, create new category and set person service to this.
-            service, created = Category.objects.get_or_create(category=new_service)
+            service, created = Category.objects.get_or_create(
+                category=new_service)
             self.cleaned_data['service'] = service
         if not location and not new_location:
             # no location specified
-            raise forms.ValidationError("Must choose an existing location or specify a new one")
+            raise forms.ValidationError(
+                "Must choose an existing location or specify a new one")
         elif not location:
             # get or create checks the existing areas, if no matching one is found, it creates a new one and sets the
             # person location to the new created location
@@ -67,7 +72,14 @@ class PersonForm(forms.ModelForm):
 
 
 class UserForm(forms.ModelForm):
-    password = forms.CharField(widget=forms.PasswordInput())
+    username = forms.CharField(widget=forms.TextInput(
+        attrs={'class': 'form-control'}))
+    first_name = forms.CharField(widget=forms.TextInput(
+        attrs={'class': 'form-control'}))
+    email = forms.CharField(widget=forms.TextInput(
+        attrs={'class': 'form-control'}))
+    password = forms.CharField(widget=forms.PasswordInput(
+        attrs={'class': 'form-control'}))
 
     class Meta:
         model = UserProfile
@@ -78,4 +90,4 @@ class ReviewsForm(forms.ModelForm):
 
     class Meta:
         model = Review
-        fields = ( 'rating', 'summary', 'review_text')
+        fields = ('rating', 'summary', 'review_text')
