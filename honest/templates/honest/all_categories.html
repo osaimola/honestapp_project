@@ -2,15 +2,15 @@
 <title>All Categories - Honest</title>
 {% endblock %} {% block intro_block %}
 <h1 class="text-info text-center">All Categories - Honest</h1>
-{% endblock %} {% block body_block %} {% if user.is_authenticated %}
-<a class="text-decoration-none" href="{% url 'honest:add_category' %}"
-  ><h2 class="text-info text-center">Add a category</h2></a
->
-{% else %}
-<p class="text-center">
+{% if user.is_authenticated == False %}
+<p class="text-center text-muted">
   <a class="text-decoration-none" href="{% url 'honest:login' %}">Sign in</a> to
   add a category.
 </p>
+{%endif%} {% endblock %} {% block body_block %} {% if user.is_authenticated %}
+<a class="text-decoration-none" href="{% url 'honest:add_category' %}"
+  ><h2 class="text-info text-center">Add a category</h2></a
+>
 {% endif %} {% if categories %}
 <ul
   class="

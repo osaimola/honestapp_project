@@ -1,28 +1,27 @@
-{% extends 'honest/themedbase.html' %}
+{% extends 'honest/themedbase.html' %} {% block title_block %}
+<title>Add A New Category</title>
+{% endblock %} {% block intro_block %}
+<h1 class="text-info text-center">Add a new category</h1>
+{% endblock%} {% block body_block %}
+<form
+  class="m-4"
+  action="/honest/add_category/"
+  id="category_form"
+  method="post"
+>
+  {% csrf_token %} {% for hidden in form.hidden_fields %} {{hidden}} {% endfor%}
+  {% for field in form.visible_fields %}
+  <div class="form-group">
+    {{field.errors}} {{field.label}} {{field}}
+    <br />
+  </div>
+  {% endfor %}
 
-{% block title_block %}
-    <title>Add A New Category</title>
-{% endblock %}
-
-{% block intro_block %}
- <h1>Add a new category</h1>
-{% endblock%}
-
-{% block body_block %}
-    <form action="/honest/add_category/" id="category_form" method="post">
-
-        {% csrf_token %}
-        {% for hidden in form.hidden_fields %}
-            {{hidden}}
-        {% endfor %}
-
-        {% for field in form.visible_fields %}
-            {{field.errors}}
-            {{field.help_text}}:
-            {{field}}
-            <br>
-        {% endfor %}
-
-        <input type="submit" name="submit" value="Create Category">
-    </form>
+  <input
+    class="btn btn-info rounder p-2"
+    type="submit"
+    name="submit"
+    value="Create Category"
+  />
+</form>
 {% endblock %}

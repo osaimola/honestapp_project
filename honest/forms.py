@@ -4,7 +4,7 @@ from honest.models import Category, Area, Person, UserProfile, Review
 
 class CategoryForm(forms.ModelForm):
     category = forms.CharField(
-        max_length=100, help_text='Enter the category name. EG Tailor, Mechanic')
+        max_length=100, help_text='Enter the category name. EG Tailor, Mechanic', widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter the category name. EG Tailor, Mechanic'}))
     views = forms.IntegerField(widget=forms.HiddenInput(), initial=0)
     slug = forms.CharField(widget=forms.HiddenInput, required=False)
 
@@ -15,7 +15,8 @@ class CategoryForm(forms.ModelForm):
 
 class AreaForm(forms.ModelForm):
     state = forms.CharField(
-        max_length=100, help_text='Enter the State name. EG Lagos, Kaduna')
+        max_length=100, help_text='Enter the State name. EG Lagos, Kaduna', widget=forms.TextInput(
+            attrs={'class': 'form-control', 'placeholder': 'Enter the State name. EG Lagos, Kaduna'}))
     views = forms.IntegerField(widget=forms.HiddenInput, required=False)
     slug = forms.CharField(widget=forms.HiddenInput, required=False)
 
@@ -27,9 +28,25 @@ class AreaForm(forms.ModelForm):
 class PersonForm(forms.ModelForm):
     # define forms for adding new service and location, other fields will be populated automatically
     new_service = forms.CharField(max_length=100, required=False, help_text="Enter their service ONLY if it IS NOT "
-                                                                            "found above, EG Web Developer, Mechanic")
+                                                                            "found above, EG Web Developer, Mechanic", widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': "Enter their service ONLY if it IS NOT "
+                                                                                                                                                     "found above, EG Web Developer, Mechanic"}))
     new_location = forms.CharField(max_length=100, required=False, help_text="Enter their location ONLY if it IS NOT"
-                                                                             " found above, EG Lagos, Kaduna")
+                                                                             " found above, EG Lagos, Kaduna", widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': "Enter their location ONLY if it IS NOT"
+                                                                                                                                             " found above, EG Lagos, Kaduna"}))
+
+    first_name = forms.CharField(max_length=60, widget=forms.TextInput(
+        attrs={'class': 'form-control', 'placeholder': 'first name'}))
+    last_name = forms.CharField(max_length=60, widget=forms.TextInput(
+        attrs={'class': 'form-control', 'placeholder': 'last name'}))
+    phone_number = forms.CharField(max_length=13, min_length=11, widget=forms.TextInput(
+        attrs={'class': 'form-control', 'placeholder': 'phone number'}))
+    email = forms.EmailField(widget=forms.EmailInput(
+        attrs={'class': 'form-control', 'placeholder': 'email'}))
+    """
+    TODO: Pass the service and location models from database into this form
+    service = forms.ChoiceField(widget=forms.Select(
+        attrs={'class': 'form-control'}), )
+    location = forms.SelectMultiple(attrs={'class': 'form-control'})"""
 
     class Meta:
         # point form to this model to populate all its fields
@@ -73,13 +90,13 @@ class PersonForm(forms.ModelForm):
 
 class UserForm(forms.ModelForm):
     username = forms.CharField(widget=forms.TextInput(
-        attrs={'class': 'form-control'}))
+        attrs={'class': 'form-control', 'placeholder': 'username'}))
     first_name = forms.CharField(widget=forms.TextInput(
-        attrs={'class': 'form-control'}))
-    email = forms.CharField(widget=forms.TextInput(
-        attrs={'class': 'form-control'}))
+        attrs={'class': 'form-control', 'placeholder': 'first name'}))
+    email = forms.EmailField(widget=forms.EmailInput(
+        attrs={'class': 'form-control', 'placeholder': 'email'}))
     password = forms.CharField(widget=forms.PasswordInput(
-        attrs={'class': 'form-control'}))
+        attrs={'class': 'form-control', 'placeholder': "password"}))
 
     class Meta:
         model = UserProfile

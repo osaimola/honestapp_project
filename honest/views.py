@@ -15,7 +15,8 @@ from honest.forms import CategoryForm, AreaForm, PersonForm, UserForm, ReviewsFo
 def index(request):
     category_list = Category.objects.order_by('-views')[:10]
     area_list = Area.objects.order_by('-views')[:10]
-    context = {'honest_message': 'We looooove honesty!!', 'categories': category_list, 'areas': area_list}
+    context = {'honest_message': 'We looooove honesty!!',
+               'categories': category_list, 'areas': area_list}
     return render(request, 'honest/index.html', context)
 
 
@@ -147,18 +148,19 @@ def person(request, area_slug, category_slug, person_id):
             pending_review = form.save(commit=False)
             pending_review.person = Person.objects.get(pk=person_id)
             if request.user.is_authenticated:
-                pending_review.reviewer = UserProfile.objects.get(pk = request.user.id)
+                pending_review.reviewer = UserProfile.objects.get(
+                    pk=request.user.id)
             pending_review.save()
             this_person.set_average_rating()
-            return HttpResponseRedirect(reverse('honest:person', kwargs={'area_slug':area_slug,
-                                                                         'category_slug':category_slug,
-                                                                         'person_id':person_id}))
+            return HttpResponseRedirect(reverse('honest:person', kwargs={'area_slug': area_slug,
+                                                                         'category_slug': category_slug,
+                                                                         'person_id': person_id}))
         else:
             print(form.errors)
     else:
         context = {'person': this_person}
         this_persons_views = this_person.views
-        reviews = Review.objects.filter(person = this_person)
+        reviews = Review.objects.filter(person=this_person)
         context['reviews'] = reviews
 
         form = ReviewsForm()
@@ -188,7 +190,8 @@ def count_page_views(request, object):
     last_visit = request.session.get('last_visit')
     # if a value for the users last visit does not exist, set the current time to their last visit
     if last_visit:
-        last_visit_time = datetime.strptime(last_visit[:-7], "%Y-%m-%d %H:%M:%S")
+        last_visit_time = datetime.strptime(
+            last_visit[:-7], "%Y-%m-%d %H:%M:%S")
 
         if (datetime.now() - last_visit_time).seconds > 5:
             # increment the number of views if the last visit was over 5 minutes ago
@@ -217,11 +220,11 @@ def add_person(request):
             pending_person.save()
 
             # easy fix use commit false, grab user ID, save, use ID to redirect
-            return HttpResponseRedirect(reverse('honest:person', kwargs={'area_slug':pending_person.location,
-                                                                         'category_slug':pending_person.service,
-                                                                         'person_id':pending_person.id}))
-        else:
-            print(form.errors)
+            return HttpResponseRedirect(reverse('honest:person', kwargs={'area_slug': pending_person.location,
+                                                                         'category_slug': pending_person.service,
+                                                                         'person_id': pending_person.id}))
+        # else:
+            # print(form.errors)
     else:
         # if request was not a http post, display form
         form = PersonForm()
@@ -275,8 +278,9 @@ def user_login(request):
 
         # if no user object then login details are wrong, display error
         else:
-            print('Invalid login details provided: {0}, {1}'.format(username, password))
-            return HttpResponse('Either your username or password is incorrect')
+            print('Invalid login details provided: {0}, {1}'.format(
+                username, password))
+            return render(request, 'honest/login.html', {'login_error': 'Either your username or password was incorrect'})
 
     # if methos is not post, then show template with form
     # no form template because form is handled completely in template as opposed to the modelform method

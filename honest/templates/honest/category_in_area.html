@@ -6,19 +6,19 @@
 </h1>
 {% if user.is_authenticated %}
 <div class="row">
-  <div class="col">
+  <div class="col text-center">
     <a
       class="text-info text-decoration-none"
       href="{% url 'honest:add_person' %}"
       >Add a person</a
     >
   </div>
-  <div class="col">
+  <div class="col text-center">
     <a class="text-info text-decoration-none" href="{% url 'honest:add_area' %}"
       >Add an area</a
     >
   </div>
-  <div class="col">
+  <div class="col text-center">
     <a
       class="text-info text-decoration-none"
       href="{% url 'honest:add_category' %}"

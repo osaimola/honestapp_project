@@ -24,9 +24,9 @@
 
     {% if user.is_authenticated %}
     <div class="row">
-        <div class="col"><a class="text-info text-decoration-none" href="{% url 'honest:add_person' %}">Add a person</a></div>
-        <div class="col"><a class="text-info text-decoration-none" href="{% url 'honest:add_area' %}">Add an area</a></div>
-        <div class="col"><a class="text-info text-decoration-none" href="{% url 'honest:add_category' %}">Add a category</a></div>
+        <div class="col text-center"><a class="text-info text-decoration-none" href="{% url 'honest:add_person' %}">Add a person</a></div>
+        <div class="col text-center"><a class="text-info text-decoration-none" href="{% url 'honest:add_area' %}">Add an area</a></div>
+        <div class="col text-center"><a class="text-info text-decoration-none" href="{% url 'honest:add_category' %}">Add a category</a></div>
         </div>
     {% else %}
         <p class="text-muted text-center"><a class="text-decoration-none" href="{% url 'honest:login' %}">Sign in</a> to add a person, area or category</p>
