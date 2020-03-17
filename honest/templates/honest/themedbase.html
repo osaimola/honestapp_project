@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 {% load static %}
-<html>
+<html class="100">
   <head>
     {% block title_block %}
     <title>Honest</title>
@@ -17,7 +17,7 @@
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0"
     />
   </head>
-  <body>
+  <body class="d-flex flex-column h-100">
     <header>
       <!-- Navbar begins -->
       <nav
@@ -87,7 +87,7 @@
       <!-- Nabar ends-->
     </header>
 
-    <section id="main-content">
+    <section id="main-content" class="flex-grow-1">
       <div class="text-intro">
         <div class="jumbotron m-4 bg-light">
           {% block intro_block%} {% endblock %}
