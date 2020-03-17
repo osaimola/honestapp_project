@@ -16,6 +16,7 @@ class Category(models.Model):
 
     def save(self, *args, **kwargs):
         """override save function to add a slug on creationm updates slug on namechange"""
+        self.category = self.category.replace("/", "-")
         self.slug = slugify(self.category)
         super(Category, self).save(*args, **kwargs)
 
@@ -33,6 +34,7 @@ class Area(models.Model):
 
     def save(self, *args, **kwargs):
         """override save function to add a slug on creationm updates slug on namechange"""
+        self.state = self.state.replace("/", "-")
         self.slug = slugify(self.state)
         super(Area, self).save(*args, **kwargs)
 
@@ -41,14 +43,18 @@ class Area(models.Model):
 
 
 class Person(models.Model):
-    service = models.ForeignKey(Category, on_delete=models.PROTECT, related_name='service', help_text='Service')
-    location = models.ForeignKey(Area, on_delete=models.PROTECT, related_name='location', help_text='Location (state)')
+    service = models.ForeignKey(
+        Category, on_delete=models.PROTECT, related_name='service', help_text='Service')
+    location = models.ForeignKey(
+        Area, on_delete=models.PROTECT, related_name='location', help_text='Location (state)')
     first_name = models.CharField(max_length=60, help_text='First name')
-    last_name = models.CharField(max_length=60, help_text='Last name (surname)')
+    last_name = models.CharField(
+        max_length=60, help_text='Last name (surname)')
     phone_number = models.CharField(max_length=14, validators=[
         MinLengthValidator(11, message='phone number must be 11 - 14 characters long')], help_text="phone number 11"
                                                                                                    "- 14 digits allowed")
-    email = models.EmailField(max_length=150, blank=True, help_text='Valid email address')
+    email = models.EmailField(
+        max_length=150, blank=True, help_text='Valid email address')
     date_added = models.DateField(auto_now_add=True)
     views = models.IntegerField(default=0)
     upvotes = models.IntegerField(default=0)
@@ -69,9 +75,10 @@ class Person(models.Model):
 
     def set_average_rating(self):
         if self.review_set.all():
-            rating_sum = self.review_set.all().aggregate(Sum('rating'))['rating__sum']
+            rating_sum = self.review_set.all().aggregate(
+                Sum('rating'))['rating__sum']
             rating_count = self.review_set.all().count()
-            self.rating =  round(rating_sum/rating_count, 2)
+            self.rating = round(rating_sum/rating_count, 2)
             self.save()
 
     def avg_rating(self):
@@ -101,8 +108,10 @@ class Review(models.Model):
         (FOUR_STARS, "4 Stars"),
         (FIVE_STARS, "5 Stars"),
     )
-    person = models.ForeignKey(Person, on_delete=models.CASCADE, related_name="review_set")
-    reviewer = models.ForeignKey(UserProfile, on_delete=models.CASCADE, blank=True, null=True, related_name="reviews")
+    person = models.ForeignKey(
+        Person, on_delete=models.CASCADE, related_name="review_set")
+    reviewer = models.ForeignKey(
+        UserProfile, on_delete=models.CASCADE, blank=True, null=True, related_name="reviews")
     rating = models.IntegerField(default=5, choices=CHOICE_SET)
     summary = models.CharField(max_length=40)
     review_text = models.CharField(max_length=360, blank=True)
